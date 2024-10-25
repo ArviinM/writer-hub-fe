@@ -4,6 +4,9 @@ import { useUserStore } from '@/stores/userStore'
 import UserListView from '@/views/users/UserListView.vue'
 import CreateUserView from '@/views/users/CreateUserView.vue'
 import EditUserView from '@/views/users/EditUserView.vue'
+import EditCompanyView from '@/views/companies/EditCompanyView.vue'
+import CompanyListView from '@/views/companies/CompanyListView.vue'
+import CreateCompanyView from '@/views/companies/CreateCompanyView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,14 +40,24 @@ const router = createRouter({
       component: EditUserView,
       meta: { requiresAuth: true, requiredRole: 'Editor' },
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
+    {
+      path: '/companies',
+      name: 'companies',
+      component: CompanyListView,
+      meta: { requiresAuth: true, requiredRole: 'Editor' },
+    },
+    {
+      path: '/companies/create',
+      name: 'createCompany',
+      component: CreateCompanyView,
+      meta: { requiresAuth: true, requiredRole: 'Editor' },
+    },
+    {
+      path: '/companies/:id/edit',
+      name: 'editCompany',
+      component: EditCompanyView,
+      meta: { requiresAuth: true, requiredRole: 'Editor' },
+    },
   ],
 })
 
