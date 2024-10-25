@@ -7,6 +7,9 @@ import EditUserView from '@/views/users/EditUserView.vue'
 import EditCompanyView from '@/views/companies/EditCompanyView.vue'
 import CompanyListView from '@/views/companies/CompanyListView.vue'
 import CreateCompanyView from '@/views/companies/CreateCompanyView.vue'
+import CreateArticleView from '@/views/articles/CreateArticleView.vue'
+import EditArticleView from '@/views/articles/EditArticleView.vue'
+import ArticlesListView from '@/views/articles/ArticlesListView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +60,24 @@ const router = createRouter({
       name: 'editCompany',
       component: EditCompanyView,
       meta: { requiresAuth: true, requiredRole: 'Editor' },
+    },
+    {
+      path: '/articles',
+      name: 'articles',
+      component: ArticlesListView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/articles/create',
+      name: 'createArticle',
+      component: CreateArticleView,
+      meta: { requiresAuth: true, requiredRole: 'Writer' },
+    },
+    {
+      path: '/articles/:id/edit',
+      name: 'editArticle',
+      component: EditArticleView,
+      meta: { requiresAuth: true },
     },
   ],
 })
