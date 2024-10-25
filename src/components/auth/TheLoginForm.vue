@@ -1,4 +1,3 @@
-// src/components/auth/TheLoginForm.vue
 <template>
   <form @submit.prevent="login">
     <div>
@@ -40,15 +39,19 @@ export default {
         return response.data
       },
       onSuccess: (data: BaseResponse<User>) => {
-        localStorage.setItem('accessToken', data.data.accessToken)
-        localStorage.setItem('refreshToken', data.data.refreshToken)
+        if (data.data) {
+          if (data.data.accessToken && data.data.refreshToken) {
+            localStorage.setItem('accessToken', data.data.accessToken)
+            localStorage.setItem('refreshToken', data.data.refreshToken)
+          }
 
-        userStore.setUser(data.data)
+          userStore.setUser(data.data)
 
-        router.push('/')
+          router.push('/')
+        }
       },
-      onError: (error: any) => {
-        errorMessage.value = error.response?.data?.error || 'Failed to log in'
+      onError: (error: { response: BaseResponse<string> }) => {
+        errorMessage.value = error.response?.error || 'Failed to log in'
       },
     })
 
