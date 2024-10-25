@@ -39,7 +39,7 @@ export default {
         const response = await axiosInstance.post('/auth/login', credentials)
         return response.data
       },
-      onSuccess: data => {
+      onSuccess: (data: BaseResponse<User>) => {
         localStorage.setItem('accessToken', data.data.accessToken)
         localStorage.setItem('refreshToken', data.data.refreshToken)
 
@@ -47,7 +47,7 @@ export default {
 
         router.push('/')
       },
-      onError: (error: BaseResponse<string>) => {
+      onError: (error: any) => {
         errorMessage.value = error.response?.data?.error || 'Failed to log in'
       },
     })
