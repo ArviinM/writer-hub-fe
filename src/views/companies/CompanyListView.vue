@@ -1,3 +1,38 @@
+<script setup lang="ts">
+import { useMutation, useQuery } from '@tanstack/vue-query'
+import axiosInstance from '../../utils/axiosInstance'
+import { queryClient } from '@/utils/queryClient'
+
+const {
+  isLoading,
+  data: companies,
+  error,
+} = useQuery({
+  queryKey: ['companies'],
+  queryFn: async () => {
+    const response = await axiosInstance.get('/companies')
+    return response.data.data
+  },
+})
+
+const deleteCompanyMutation = useMutation({
+  mutationFn: async (companyId: number) => {
+    await axiosInstance.delete(`/companies/${companyId}`)
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['companies'] })
+  },
+  onError: (error: Error) => {
+    console.error('Error deleting company:', error)
+    // Handle the error, e.g., display an error message
+  },
+})
+
+const deleteCompany = (companyId: number) => {
+  deleteCompanyMutation.mutate(companyId)
+}
+</script>
+
 <template>
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="error">Error: {{ error }}</div>
@@ -27,45 +62,3 @@
     </tbody>
   </table>
 </template>
-
-<script lang="ts">
-import { useQuery, useMutation } from '@tanstack/vue-query'
-import axiosInstance from '../../utils/axiosInstance'
-import { queryClient } from '@/utils/queryClient'
-
-export default {
-  setup() {
-    const getCompaniesQuery = useQuery({
-      queryKey: ['companies'],
-      queryFn: async () => {
-        const response = await axiosInstance.get('/companies')
-        return response.data.data
-      },
-    })
-
-    const deleteCompanyMutation = useMutation({
-      mutationFn: async (companyId: number) => {
-        await axiosInstance.delete(`/companies/${companyId}`)
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['companies'] })
-      },
-      onError: (error: Error) => {
-        console.error('Error deleting company:', error)
-        // Handle the error, e.g., display an error message
-      },
-    })
-
-    const deleteCompany = (companyId: number) => {
-      deleteCompanyMutation.mutate(companyId)
-    }
-
-    return {
-      companies: getCompaniesQuery.data,
-      isLoading: getCompaniesQuery.isLoading,
-      error: getCompaniesQuery.error,
-      deleteCompany,
-    }
-  },
-}
-</script>

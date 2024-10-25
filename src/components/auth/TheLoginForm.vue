@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useMutation } from '@tanstack/vue-query'
+import axiosInstance from '../../utils/axiosInstance'
+import type { BaseResponse } from '@/types/baseResponse'
+import { useUserStore } from '@/stores/userStore'
+
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const router = useRouter()
+const userStore = useUserStore()
+
+const loginMutation = useMutation({
+  mutationFn: async (credentials: { email: string; password: string }) => {
+    const response = await axiosInstance.post('/auth/login', credentials)
+    return response.data
+  },
+  onSuccess: data => {
+    // Store the JWT and refresh token (consider using HTTP-only cookies for better security)
+    localStorage.setItem('accessToken', data.data.accessToken)
+    localStorage.setItem('refreshToken', data.data.refreshToken)
+
+    // Update user store
+    userStore.setUser(data.data)
+
+    // Redirect to the home page or a protected route
+    router.push('/')
+  },
+  onError: (error: { response: BaseResponse<string> }) => {
+    errorMessage.value = error.response?.error || 'Failed to log in'
+  },
+})
+
+const login = async () => {
+  loginMutation.mutate({ email: email.value, password: password.value })
+}
+</script>
+
 <template>
   <form @submit.prevent="login">
     <div>
@@ -12,54 +52,3 @@
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
   </form>
 </template>
-
-<script lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useMutation } from '@tanstack/vue-query'
-import { useUserStore } from '@/stores/userStore'
-import type { BaseResponse } from '@/types/baseResponse'
-import type { User } from '@/types/types'
-import axiosInstance from '@/utils/axiosInstance'
-
-export default {
-  setup() {
-    const email = ref('')
-    const password = ref('')
-    const errorMessage = ref('')
-    const router = useRouter()
-    const userStore = useUserStore()
-
-    const loginMutation = useMutation({
-      mutationFn: async (credentials: {
-        email: string
-        password: string
-      }): Promise<BaseResponse<User>> => {
-        const response = await axiosInstance.post('/auth/login', credentials)
-        return response.data
-      },
-      onSuccess: (data: BaseResponse<User>) => {
-        if (data.data) {
-          if (data.data.accessToken && data.data.refreshToken) {
-            localStorage.setItem('accessToken', data.data.accessToken)
-            localStorage.setItem('refreshToken', data.data.refreshToken)
-          }
-
-          userStore.setUser(data.data)
-
-          router.push('/')
-        }
-      },
-      onError: (error: { response: BaseResponse<string> }) => {
-        errorMessage.value = error.response?.error || 'Failed to log in'
-      },
-    })
-
-    const login = async () => {
-      loginMutation.mutate({ email: email.value, password: password.value })
-    }
-
-    return { email, password, errorMessage, login }
-  },
-}
-</script>

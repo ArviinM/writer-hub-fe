@@ -1,5 +1,22 @@
+<script setup lang="ts">
+import { toRefs, reactive } from 'vue'
+import type { User } from '@/types/types'
+
+const props = defineProps({
+  user: {
+    type: Object as () => User,
+    required: true,
+  },
+})
+
+const emit = defineEmits(['submit'])
+
+const { user } = toRefs(props)
+const userCopy = reactive({ ...user.value })
+</script>
+
 <template>
-  <form @submit.prevent="$emit('submit', { ...userCopy })">
+  <form @submit.prevent="emit('submit', { ...userCopy })">
     <div>
       <label for="firstname">First Name:</label>
       <input type="text" id="firstname" v-model="userCopy.firstname" required />
@@ -38,24 +55,3 @@
     <button type="submit">Save</button>
   </form>
 </template>
-
-<script lang="ts">
-import { toRefs, reactive } from 'vue'
-import type { User } from '@/types/types'
-
-export default {
-  props: {
-    user: {
-      type: Object as () => User,
-      required: true,
-    },
-  },
-  emits: ['submit'],
-  setup(props) {
-    const { user } = toRefs(props)
-    const userCopy = reactive({ ...user.value })
-
-    return { userCopy }
-  },
-}
-</script>
