@@ -3,9 +3,9 @@
     class="lg:container relative h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-5 lg:p-0"
   >
     <div
-      class="relative hidden h-full flex-col p-10 col-span-3 lg:flex bg-cover bg-[url(https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)]"
+      class="relative hidden h-full flex-col rounded-lg col-span-3 lg:flex bg-cover bg-[url(https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)]"
     />
-    <div class="lg:p-8 col-span-2">
+    <div class="p-8 col-span-2">
       <div
         class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]"
       >
