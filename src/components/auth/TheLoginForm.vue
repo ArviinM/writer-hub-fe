@@ -12,6 +12,7 @@ import WLabel from '@/components/shared/label/WLabel.vue'
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
+const isLoading = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -20,12 +21,15 @@ const loginMutation = useMutation({
     const response = await axiosInstance.post('/auth/login', credentials)
     return response.data
   },
+  onMutate: async () => {
+    isLoading.value = true
+  },
   onSuccess: data => {
     localStorage.setItem('accessToken', data.data.accessToken)
     localStorage.setItem('refreshToken', data.data.refreshToken)
 
     userStore.setUser(data.data)
-
+    isLoading.value = false
     router.push('/')
   },
   onError: (error: { response: BaseResponse<string> }) => {
@@ -68,7 +72,10 @@ const login = async () => {
             required
           />
         </div>
-        <WButton type="submit" variant="default">Sign In</WButton>
+        <WButton type="submit" variant="default" :disabled="isLoading"
+          >Sign In
+          <div v-if="isLoading">Loading..</div>
+        </WButton>
       </div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
     </form>
