@@ -49,6 +49,7 @@ const loginMutation = useMutation({
   },
   onError: (error: { response: BaseResponse<string> }) => {
     $toast.clear()
+    isLoading.value = false
     errorMessage.value = error.response?.error || 'Failed to log in'
     $toast.error('Failed to log in!', {
       position: 'top',
