@@ -84,13 +84,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+
+  if (to.name === 'login' && userStore.isAuthenticated) {
+    next('/')
+  } else if (to.meta.requiresAuth && !userStore.isAuthenticated) {
     next('/login')
   } else if (
     to.meta.requiredRole &&
     userStore.userType !== to.meta.requiredRole
   ) {
-    next('/') // Redirect to home or another authorized route
+    next('/')
   } else {
     next()
   }
