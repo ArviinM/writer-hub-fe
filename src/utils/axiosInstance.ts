@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router' // Import the router instance
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -14,6 +15,13 @@ axiosInstance.interceptors.request.use(
     return config
   },
   error => {
+    // If there's an error in the request, and it's not a retry attempt,
+    // it might indicate the access token is invalid
+    if (error.response && !error.config._retry) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      router.push('/login')
+    }
     return Promise.reject(error)
   },
 )
@@ -28,7 +36,6 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
-        // Attempt to refresh the access token
         const refreshResponse = await axios.post('/auth/refresh', {
           refreshToken: localStorage.getItem('refreshToken'),
         })
@@ -36,18 +43,29 @@ axiosInstance.interceptors.response.use(
         const newAccessToken = refreshResponse.data.accessToken
         localStorage.setItem('accessToken', newAccessToken)
 
-        // Update the Authorization header with the new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-
-        // Retry the original request
         return axiosInstance(originalRequest)
       } catch (refreshError) {
-        // Token refresh failed, log out the user or handle the error appropriately
         console.error('Token refresh failed:', refreshError)
-        // You might want to redirect the user to the login page here
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        router.push('/login')
         return Promise.reject(refreshError)
       }
     }
+
+    // If the request fails and it's not a 403 (and not a retry),
+    // it might indicate the access token is invalid
+    if (
+      error.response &&
+      error.response.status !== 403 &&
+      !originalRequest._retry
+    ) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      router.push('/login')
+    }
+
     return Promise.reject(error)
   },
 )
