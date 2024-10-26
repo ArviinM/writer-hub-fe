@@ -22,11 +22,7 @@ let quill: Quill | undefined = undefined
 const { article } = toRefs(props)
 const articleCopy = reactive({ ...article.value })
 
-const {
-  // isLoading,
-  // error,
-  data: companies,
-} = useQuery({
+const { data: companies } = useQuery({
   queryKey: ['companies'],
   queryFn: async () => {
     const response = await axiosInstance.get('/companies')
@@ -42,15 +38,11 @@ const options = ref({
       ['bold', 'italic', 'underline', 'strike'],
       [{ color: [] }, { background: [] }],
       [{ script: 'super' }, { script: 'sub' }],
-      [{ header: '1' }, { header: '2' }, 'blockquote', 'code-block'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      ['direction', { align: [] }],
-      ['link', 'image', 'video', 'formula'],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ header: '1' }, { header: '2' }],
+      [{ align: [] }],
+      ['link', 'image'],
       ['clean'],
     ],
   },
@@ -61,6 +53,11 @@ const options = ref({
 onMounted(() => {
   quill = editor.value?.initialize(Quill)
 })
+
+const handleImageChange = (event: any) => {
+  const file = event.target.files[0]
+  articleCopy.image = file
+}
 </script>
 
 <template>
@@ -70,8 +67,8 @@ onMounted(() => {
       <input type="text" id="title" v-model="articleCopy.title" required />
     </div>
     <div>
-      <label for="image">Image URL:</label>
-      <input type="text" id="image" v-model="articleCopy.image" required />
+      <label for="image">Image:</label>
+      <input type="file" id="image" @change="handleImageChange" required />
     </div>
     <div>
       <label for="link">Link:</label>
@@ -88,12 +85,6 @@ onMounted(() => {
         v-model="articleCopy.content"
         :options="options"
       />
-      <!--      <vue-quilly-->
-      <!--        v-model:content="articleCopy.content"-->
-      <!--        theme="snow"-->
-      <!--        :toolbar="toolbarOptions"-->
-      <!--        :placeholder="'Write your articles content here...'"-->
-      <!--      />-->
     </div>
     <div>
       <label for="companyId">Company:</label>

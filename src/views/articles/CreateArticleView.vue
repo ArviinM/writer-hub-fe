@@ -20,11 +20,22 @@ const newArticle = ref<Article>({
 
 const createArticleMutation = useMutation({
   mutationFn: async (article: Article) => {
-    const response = await axiosInstance.post('/articles', article)
+    const formData = new FormData()
+    formData.append('image', article.image as File)
+    formData.append('title', article.title)
+    formData.append('link', article.link)
+    formData.append('date', article.date)
+    formData.append('content', article.content)
+    formData.append('companyId', article.companyId!.toString())
+
+    const response = await axiosInstance.post('/articles', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     return response.data
   },
   onSuccess: () => {
-    // Redirect to the article list page
     router.push('/articles')
   },
   onError: (error: Error) => {

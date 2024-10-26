@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const baseUrl = import.meta.env.VITE_API_BASE_URL
 defineProps<{
   title: string
   imageUrl: string
@@ -14,7 +15,7 @@ defineProps<{
 <template>
   <div class="border rounded-lg p-4 shadow-md">
     <img
-      :src="imageUrl"
+      :src="`${baseUrl + '/' + imageUrl}`"
       alt="Article Image"
       class="mb-2 rounded-md h-56 w-full object-cover"
     />

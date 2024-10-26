@@ -23,7 +23,19 @@ const {
 
 const updateArticleMutation = useMutation({
   mutationFn: async (article: Article) => {
-    await axiosInstance.put(`/articles/${articleId}`, article)
+    const formData = new FormData()
+    formData.append('image', article.image as File)
+    formData.append('title', article.title)
+    formData.append('link', article.link)
+    formData.append('date', article.date)
+    formData.append('content', article.content)
+    formData.append('companyId', article.companyId!.toString())
+
+    await axiosInstance.put(`/articles/${articleId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
   },
   onSuccess: () => {
     router.push('/articles')
