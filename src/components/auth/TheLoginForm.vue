@@ -5,6 +5,9 @@ import { useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import type { BaseResponse } from '@/types/baseResponse'
 import { useUserStore } from '@/stores/userStore'
+import WInput from '@/components/shared/input/WInput.vue'
+import WButton from '@/components/shared/button/WButton.vue'
+import WLabel from '@/components/shared/label/WLabel.vue'
 
 const email = ref('')
 const password = ref('')
@@ -18,14 +21,11 @@ const loginMutation = useMutation({
     return response.data
   },
   onSuccess: data => {
-    // Store the JWT and refresh token (consider using HTTP-only cookies for better security)
     localStorage.setItem('accessToken', data.data.accessToken)
     localStorage.setItem('refreshToken', data.data.refreshToken)
 
-    // Update user store
     userStore.setUser(data.data)
 
-    // Redirect to the home page or a protected route
     router.push('/')
   },
   onError: (error: { response: BaseResponse<string> }) => {
@@ -39,16 +39,38 @@ const login = async () => {
 </script>
 
 <template>
-  <form @submit.prevent="login">
-    <div>
-      <label for="email">Email:</label>
-      <input type="email" id="email" v-model="email" required />
-    </div>
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" v-model="password" required />
-    </div>
-    <button type="submit">Login</button>
-    <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-  </form>
+  <div class="grid gap-6">
+    <form @submit.prevent="login">
+      <div class="grid gap-3">
+        <div class="grid gap-1">
+          <WLabel usage="email">Email</WLabel>
+          <WInput
+            id="email"
+            placeholder="name@example.com"
+            type="email"
+            auto-capitalize="none"
+            auto-complete="email"
+            auto-correct="off"
+            v-model="email"
+            required
+          />
+        </div>
+        <div class="grid gap-1">
+          <WLabel usage="email">Password</WLabel>
+          <WInput
+            id="password"
+            placeholder="******"
+            type="password"
+            auto-capitalize="none"
+            auto-complete="email"
+            auto-correct="off"
+            v-model="password"
+            required
+          />
+        </div>
+        <WButton type="submit" variant="default">Sign In</WButton>
+      </div>
+      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+    </form>
+  </div>
 </template>
