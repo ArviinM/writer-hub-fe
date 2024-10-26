@@ -24,7 +24,8 @@
     "tailwindcss": "^3.4.14",
     "vue": "^3.5.12",
     "vue-quilly": "^1.1.0",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue-toast-notification": "^3"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",

@@ -8,6 +8,7 @@ import { useUserStore } from '@/stores/userStore'
 import WInput from '@/components/shared/input/WInput.vue'
 import WButton from '@/components/shared/button/WButton.vue'
 import WLabel from '@/components/shared/label/WLabel.vue'
+import { useToast } from 'vue-toast-notification'
 
 const email = ref('')
 const password = ref('')
@@ -16,6 +17,8 @@ const isLoading = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 
+const $toast = useToast()
+
 const loginMutation = useMutation({
   mutationFn: async (credentials: { email: string; password: string }) => {
     const response = await axiosInstance.post('/auth/login', credentials)
@@ -23,17 +26,35 @@ const loginMutation = useMutation({
   },
   onMutate: async () => {
     isLoading.value = true
+    $toast.info('Loading!', {
+      position: 'top',
+      pauseOnHover: true,
+      dismissible: true,
+    })
   },
   onSuccess: data => {
+    $toast.clear()
     localStorage.setItem('accessToken', data.data.accessToken)
     localStorage.setItem('refreshToken', data.data.refreshToken)
 
     userStore.setUser(data.data)
     isLoading.value = false
+
+    $toast.success(`Welcome back, ${data.data.firstname}!`, {
+      position: 'top',
+      pauseOnHover: true,
+      dismissible: true,
+    })
     router.push('/')
   },
   onError: (error: { response: BaseResponse<string> }) => {
+    $toast.clear()
     errorMessage.value = error.response?.error || 'Failed to log in'
+    $toast.error('Failed to log in!', {
+      position: 'top',
+      pauseOnHover: true,
+      dismissible: true,
+    })
   },
 })
 
