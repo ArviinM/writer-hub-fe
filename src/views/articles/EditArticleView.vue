@@ -54,5 +54,10 @@ const updateArticle = (article: Article) => {
 <template>
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="error">Error: {{ error }}</div>
-  <TheArticleForm v-else :article="article" @submit="updateArticle" />
+  <TheArticleForm
+    v-else
+    :article="article"
+    @submit="updateArticle"
+    :isEdit="true"
+  />
 </template>
