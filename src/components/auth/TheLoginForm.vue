@@ -26,7 +26,7 @@ const loginMutation = useMutation({
   },
   onMutate: async () => {
     isLoading.value = true
-    $toast.info('Loading!', {
+    $toast.info('We are now signing you in!', {
       position: 'top',
       pauseOnHover: true,
       dismissible: true,
@@ -93,9 +93,9 @@ const login = async () => {
             required
           />
         </div>
-        <WButton type="submit" variant="default" :disabled="isLoading"
-          >Sign In
+        <WButton type="submit" variant="default" :disabled="isLoading">
           <div v-if="isLoading">Loading..</div>
+          <div v-else>Sign In</div>
         </WButton>
       </div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>

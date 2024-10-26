@@ -18,6 +18,11 @@
               >Home
             </router-link>
             <router-link
+              to="/articles"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
+              >Articles
+            </router-link>
+            <router-link
               v-if="userStore.userType === 'Editor'"
               to="/users"
               class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
@@ -28,11 +33,6 @@
               to="/companies"
               class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
               >Companies
-            </router-link>
-            <router-link
-              to="/articles"
-              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
-              >Articles
             </router-link>
           </div>
         </div>
