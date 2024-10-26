@@ -3,7 +3,14 @@ export default {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   content: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Satoshi', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
+  experimental: {
+    classRegex: ['cva\\(([^)]*)\\)', '["\'`]([^"\'`]*).*?["\'`]'],
+  },
 }
