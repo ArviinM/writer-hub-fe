@@ -54,6 +54,7 @@ const publishArticle = (articleId: number) => {
 </script>
 
 <template>
+  <router-link :to="`/articles/create`">Create</router-link>
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="error">Error: {{ error }}</div>
   <table v-else>

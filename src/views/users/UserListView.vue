@@ -34,6 +34,7 @@ const deleteUser = (userId: number) => {
 </script>
 
 <template>
+  <router-link :to="`/users/create`">Create</router-link>
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="error">Error: {{ error }}</div>
   <table v-else>
