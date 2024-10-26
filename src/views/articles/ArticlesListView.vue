@@ -5,6 +5,7 @@ import { useUserStore } from '@/stores/userStore'
 import { queryClient } from '@/utils/queryClient'
 
 const userStore = useUserStore()
+const baseUrl = import.meta.env.VITE_API_BASE_URL
 
 const {
   isLoading,
@@ -72,7 +73,11 @@ const publishArticle = (articleId: number) => {
       <tr v-for="article in articles" :key="article.id">
         <td>{{ article.title }}</td>
         <td>
-          <img :src="article.image" alt="Article Image" width="50" />
+          <img
+            :src="`${baseUrl + '/' + article.image}`"
+            alt="Article Image"
+            width="50"
+          />
         </td>
         <td>{{ article.link }}</td>
         <td>{{ article.date }}</td>
