@@ -2,6 +2,7 @@
 import { useQuery, useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import { queryClient } from '@/utils/queryClient'
+import WTable from '@/components/shared/table/WTable.vue'
 
 const {
   isLoading,
@@ -34,34 +35,80 @@ const deleteUser = (userId: number) => {
 </script>
 
 <template>
-  <router-link :to="`/users/create`">Create</router-link>
-  <div v-if="isLoading">Loading...</div>
-  <div v-else-if="error">Error: {{ error }}</div>
-  <table v-else>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.id }}</td>
-        <td>{{ user.firstname }}</td>
-        <td>{{ user.lastname }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.type }}</td>
-        <td>{{ user.status }}</td>
-        <td>
-          <router-link :to="`/users/${user.id}/edit`">Edit</router-link>
-          <button @click="deleteUser(user.id)">Delete</button>
+  <div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold text-gray-900">Users</h1>
+      <router-link
+        :to="`/users/create`"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Create User
+      </router-link>
+    </div>
+    <WTable
+      :headers="[
+        { key: 'id', label: 'ID' },
+        { key: 'firstname', label: 'First Name' },
+        { key: 'lastname', label: 'Last Name' },
+        { key: 'email', label: 'Email' },
+        { key: 'type', label: 'Type' },
+        { key: 'status', label: 'Status' },
+        { key: 'actions', label: 'Actions' },
+      ]"
+      :items="users"
+      :is-loading="isLoading"
+      :error="error"
+    >
+      <template #default="{ item }">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ item.id }}</div>
         </td>
-      </tr>
-    </tbody>
-  </table>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ item.firstname }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ item.lastname }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ item.email }}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span
+            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+            :class="{
+              'bg-green-100 text-green-800': item.type === 'Editor',
+              'bg-blue-100 text-blue-800': item.type === 'Writer',
+            }"
+          >
+            {{ item.type }}
+          </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span
+            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+            :class="{
+              'bg-green-100 text-green-800': item.status === 'Active',
+              'bg-red-100 text-red-800': item.status === 'Inactive',
+            }"
+          >
+            {{ item.status }}
+          </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+          <router-link
+            :to="`/users/${item.id}/edit`"
+            class="text-indigo-600 hover:text-indigo-900 mr-2"
+          >
+            Edit
+          </router-link>
+          <button
+            @click="deleteUser(item.id)"
+            class="text-red-600 hover:text-red-900"
+          >
+            Delete
+          </button>
+        </td>
+      </template>
+    </WTable>
+  </div>
 </template>

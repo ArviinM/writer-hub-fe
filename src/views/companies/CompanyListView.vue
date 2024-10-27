@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import { queryClient } from '@/utils/queryClient'
+import WTable from '@/components/shared/table/WTable.vue'
 
 const {
   isLoading,
@@ -34,32 +35,68 @@ const deleteCompany = (companyId: number) => {
 </script>
 
 <template>
-  <router-link :to="`/companies/create`">Create</router-link>
-  <div v-if="isLoading">Loading...</div>
-  <div v-else-if="error">Error: {{ error }}</div>
-  <table v-else>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Logo</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="company in companies" :key="company.id">
-        <td>{{ company.id }}</td>
-        <td>{{ company.name }}</td>
-        <td>
-          <img :src="company.logo" alt="Company Logo" width="50" />
+  <div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold text-gray-900">Companies</h1>
+      <router-link
+        :to="`/companies/create`"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Create Company
+      </router-link>
+    </div>
+    <WTable
+      :headers="[
+        { key: 'id', label: 'ID' },
+        { key: 'name', label: 'Name' },
+        { key: 'logo', label: 'Logo' },
+        { key: 'status', label: 'Status' },
+        { key: 'actions', label: 'Actions' },
+      ]"
+      :items="companies"
+      :is-loading="isLoading"
+      :error="error"
+    >
+      <template #default="{ item }">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ item.id }}</div>
         </td>
-        <td>{{ company.status }}</td>
-        <td>
-          <router-link :to="`/companies/${company.id}/edit`">Edit</router-link>
-          <button @click="deleteCompany(company.id)">Delete</button>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900">{{ item.name }}</div>
         </td>
-      </tr>
-    </tbody>
-  </table>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <img
+            :src="item.logo"
+            alt="Company Logo"
+            class="h-10 w-10 rounded-full"
+          />
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span
+            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+            :class="{
+              'bg-green-100 text-green-800': item.status === 'Active',
+              'bg-red-100 text-red-800': item.status === 'Inactive',
+            }"
+          >
+            {{ item.status }}
+          </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+          <router-link
+            :to="`/companies/${item.id}/edit`"
+            class="text-indigo-600 hover:text-indigo-900 mr-2"
+          >
+            Edit
+          </router-link>
+          <button
+            @click="deleteCompany(item.id)"
+            class="text-red-600 hover:text-red-900"
+          >
+            Delete
+          </button>
+        </td>
+      </template>
+    </WTable>
+  </div>
 </template>
