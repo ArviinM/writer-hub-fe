@@ -5,7 +5,9 @@ import { useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import TheUserForm from '../../components/users/TheUserForm.vue'
 import type { User } from '@/types/types'
+import { useToast } from 'vue-toast-notification'
 
+const toast = useToast()
 const router = useRouter()
 const newUser = ref<User>({} as User)
 
@@ -15,12 +17,14 @@ const createUserMutation = useMutation({
     return response.data
   },
   onSuccess: () => {
-    // Redirect to the user list page
+    toast.clear()
+    toast.success('User created successfully!')
     router.push('/users')
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error creating user:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to create user')
   },
 })
 

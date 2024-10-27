@@ -4,7 +4,9 @@ import { useQuery, useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import TheCompanyForm from '../../components/companies/TheCompanyForm.vue'
 import type { Company } from '@/types/types'
+import { useToast } from 'vue-toast-notification'
 
+const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const companyId = parseInt(route.params.id as string)
@@ -26,11 +28,14 @@ const updateCompanyMutation = useMutation({
     await axiosInstance.put(`/companies/${companyId}`, company)
   },
   onSuccess: () => {
+    toast.clear()
+    toast.success('Company updated successfully!')
     router.push('/companies')
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error updating company:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to update company')
   },
 })
 

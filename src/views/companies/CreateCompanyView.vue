@@ -5,7 +5,9 @@ import { useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import TheCompanyForm from '../../components/companies/TheCompanyForm.vue'
 import type { Company } from '@/types/types'
+import { useToast } from 'vue-toast-notification'
 
+const toast = useToast()
 const router = useRouter()
 const newCompany = ref({} as Company)
 
@@ -15,12 +17,14 @@ const createCompanyMutation = useMutation({
     return response.data
   },
   onSuccess: () => {
-    // Redirect to the company list page
+    toast.clear()
+    toast.success('Company created successfully!')
     router.push('/companies')
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error creating company:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to create company')
   },
 })
 

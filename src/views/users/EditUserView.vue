@@ -4,7 +4,9 @@ import { useQuery, useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import TheUserForm from '../../components/users/TheUserForm.vue'
 import type { User } from '@/types/types'
+import { useToast } from 'vue-toast-notification'
 
+const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const userId = parseInt(route.params.id as string)
@@ -26,11 +28,14 @@ const updateUserMutation = useMutation({
     await axiosInstance.put(`/users/${userId}`, user)
   },
   onSuccess: () => {
+    toast.clear()
+    toast.success('User updated successfully!')
     router.push('/users')
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error updating user:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to update user')
   },
 })
 
