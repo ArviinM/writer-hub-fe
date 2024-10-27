@@ -3,6 +3,9 @@ import { useQuery, useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import { queryClient } from '@/utils/queryClient'
 import WTable from '@/components/shared/table/WTable.vue'
+import { useToast } from 'vue-toast-notification'
+
+const toast = useToast()
 
 const {
   isLoading,
@@ -21,11 +24,14 @@ const deleteUserMutation = useMutation({
     await axiosInstance.delete(`/users/${userId}`)
   },
   onSuccess: () => {
+    toast.clear()
+    toast.success('User deleted successfully!')
     queryClient.invalidateQueries({ queryKey: ['users'] })
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error deleting user:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to delete user')
   },
 })
 
