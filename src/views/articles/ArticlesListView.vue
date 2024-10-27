@@ -124,7 +124,7 @@ const publishArticle = (articleItem: Article) => {
             {{ item.status }}
           </span>
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
           <router-link
             :to="`/articles/${item.id}/edit`"
             class="text-indigo-600 hover:text-indigo-900 mr-2"
