@@ -42,6 +42,10 @@
           </a>
           .
         </p>
+        <span class="opacity-75 italic text-sm text-center">
+          Please bear with me with the server because i'm only using a free one
+          that has 0.1 cpu and 512mb ram. Thanks!
+        </span>
       </div>
     </div>
   </div>
