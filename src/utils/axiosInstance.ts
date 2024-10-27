@@ -20,6 +20,7 @@ axiosInstance.interceptors.request.use(
     if (error.response && !error.config._retry) {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
+      localStorage.removeItem('user')
       router.push('/login')
     }
     return Promise.reject(error)
@@ -49,6 +50,7 @@ axiosInstance.interceptors.response.use(
         console.error('Token refresh failed:', refreshError)
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
+        localStorage.removeItem('user')
         router.push('/login')
         return Promise.reject(refreshError)
       }
@@ -63,6 +65,7 @@ axiosInstance.interceptors.response.use(
     ) {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
+      localStorage.removeItem('user')
       router.push('/login')
     }
 
