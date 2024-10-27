@@ -6,6 +6,7 @@ import axiosInstance from '../../utils/axiosInstance'
 import TheArticleForm from '../../components/articles/TheArticleForm.vue'
 import type { Article } from '@/types/types'
 
+const toast = useToast()
 const router = useRouter()
 
 const newArticle = ref<Article>({
@@ -36,11 +37,14 @@ const createArticleMutation = useMutation({
     return response.data
   },
   onSuccess: () => {
+    toast.clear()
+    toast.success('Article created successfully!')
     router.push('/articles')
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error creating article:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to create article')
   },
 })
 

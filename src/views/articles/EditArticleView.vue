@@ -4,7 +4,9 @@ import { useQuery, useMutation } from '@tanstack/vue-query'
 import axiosInstance from '../../utils/axiosInstance'
 import TheArticleForm from '../../components/articles/TheArticleForm.vue'
 import type { Article } from '@/types/types'
+import { useToast } from 'vue-toast-notification'
 
+const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const articleId = parseInt(route.params.id as string)
@@ -38,11 +40,14 @@ const updateArticleMutation = useMutation({
     })
   },
   onSuccess: () => {
+    toast.clear()
+    toast.success('Article updated successfully!')
     router.push('/articles')
   },
-  onError: (error: Error) => {
+  onError: (error: any) => {
+    toast.clear()
     console.error('Error updating article:', error)
-    // Handle the error, e.g., display an error message
+    toast.error(error.response?.data?.error || 'Failed to update article')
   },
 })
 
