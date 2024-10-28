@@ -10,6 +10,7 @@ import CreateCompanyView from '@/views/companies/CreateCompanyView.vue'
 import CreateArticleView from '@/views/articles/CreateArticleView.vue'
 import EditArticleView from '@/views/articles/EditArticleView.vue'
 import ArticlesListView from '@/views/articles/ArticlesListView.vue'
+import { useToast } from 'vue-toast-notification'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,6 +85,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
+  const toast = useToast()
 
   if (to.name === 'login' && userStore.isAuthenticated) {
     next('/')
@@ -93,6 +95,7 @@ router.beforeEach((to, from, next) => {
     to.meta.requiredRole &&
     userStore.userType !== to.meta.requiredRole
   ) {
+    toast.error('You are not permitted to access this page.')
     next('/')
   } else {
     next()
