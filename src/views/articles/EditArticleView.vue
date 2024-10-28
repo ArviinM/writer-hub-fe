@@ -57,6 +57,9 @@ const updateArticle = (article: Article) => {
 </script>
 
 <template>
+  <div class="px-8 pt-8">
+    <h1 class="text-2xl font-bold text-gray-900">Edit an Article</h1>
+  </div>
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="error">Error: {{ error }}</div>
   <TheArticleForm

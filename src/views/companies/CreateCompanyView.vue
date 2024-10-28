@@ -34,5 +34,8 @@ const createCompany = (company: Company) => {
 </script>
 
 <template>
+  <div class="px-8 pt-8">
+    <h1 class="text-2xl font-bold text-gray-900">Create Company</h1>
+  </div>
   <TheCompanyForm :company="newCompany" @submit="createCompany" />
 </template>

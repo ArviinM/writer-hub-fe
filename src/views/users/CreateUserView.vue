@@ -34,5 +34,8 @@ const createUser = (user: User) => {
 </script>
 
 <template>
+  <div class="px-8 pt-8">
+    <h1 class="text-2xl font-bold text-gray-900">Create User</h1>
+  </div>
   <TheUserForm :user="newUser" @submit="createUser" />
 </template>

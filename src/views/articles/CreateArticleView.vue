@@ -55,5 +55,8 @@ const createArticle = (article: Article) => {
 </script>
 
 <template>
+  <div class="px-8 pt-8">
+    <h1 class="text-2xl font-bold text-gray-900">Create an Article</h1>
+  </div>
   <TheArticleForm :article="newArticle" @submit="createArticle" />
 </template>
