@@ -21,7 +21,7 @@
             Login to your account
           </h1>
           <p class="text-sm text-muted-foreground">
-            Enter your email below and password
+            Enter your email and password below
           </p>
         </div>
         <TheLoginForm />
