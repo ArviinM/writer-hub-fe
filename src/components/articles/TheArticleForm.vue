@@ -86,55 +86,57 @@ const { value: companyId, errorMessage: companyIdError } =
 </script>
 
 <template>
-  <form @submit="onSubmit">
-    <div class="grid gap-6">
-      <div class="grid gap-3">
-        <div class="grid gap-1">
-          <WLabel usage="title">Title</WLabel>
-          <WInput type="text" id="title" v-model="title" required />
-          <span class="error">{{ titleError }}</span>
+  <div class="p-8">
+    <form @submit="onSubmit">
+      <div class="grid gap-6">
+        <div class="grid gap-3">
+          <div class="grid gap-1">
+            <WLabel usage="title">Title</WLabel>
+            <WInput type="text" id="title" v-model="title" required />
+            <span class="error">{{ titleError }}</span>
+          </div>
+          <div class="grid gap-1">
+            <WLabel usage="image">Image</WLabel>
+            <input
+              type="file"
+              id="image"
+              @change="image = ($event as any).target.files[0] as File"
+              :required="!isEdit"
+            />
+            <span class="error">{{ imageError }}</span>
+          </div>
+          <div class="grid gap-1">
+            <WLabel usage="link">Link</WLabel>
+            <WInput type="text" id="link" v-model="link" required />
+            <span class="error">{{ linkError }}</span>
+          </div>
+          <div class="grid gap-1">
+            <WLabel usage="date">Date</WLabel>
+            <WInput type="date" id="date" v-model="date" required />
+            <span class="error">{{ dateError }}</span>
+          </div>
+          <div class="grid gap-1">
+            <WLabel usage="content">Content</WLabel>
+            <QuillyEditor ref="editor" v-model="content" :options="options" />
+            <span class="error">{{ contentError }}</span>
+          </div>
+          <div class="grid gap-1">
+            <WLabel usage="companyId">Company</WLabel>
+            <select id="companyId" v-model="companyId" required>
+              <option
+                v-for="(company, index) in companies"
+                :key="company.id"
+                :value="company.id"
+                :selected="index === 0"
+              >
+                {{ company.name }}
+              </option>
+            </select>
+            <span class="error">{{ companyIdError }}</span>
+          </div>
+          <WButton type="submit" variant="default">Save</WButton>
         </div>
-        <div class="grid gap-1">
-          <WLabel usage="image">Image</WLabel>
-          <input
-            type="file"
-            id="image"
-            @change="image = ($event as any).target.files[0] as File"
-            :required="!isEdit"
-          />
-          <span class="error">{{ imageError }}</span>
-        </div>
-        <div class="grid gap-1">
-          <WLabel usage="link">Link</WLabel>
-          <WInput type="text" id="link" v-model="link" required />
-          <span class="error">{{ linkError }}</span>
-        </div>
-        <div class="grid gap-1">
-          <WLabel usage="date">Date</WLabel>
-          <WInput type="date" id="date" v-model="date" required />
-          <span class="error">{{ dateError }}</span>
-        </div>
-        <div class="grid gap-1">
-          <WLabel usage="content">Content</WLabel>
-          <QuillyEditor ref="editor" v-model="content" :options="options" />
-          <span class="error">{{ contentError }}</span>
-        </div>
-        <div class="grid gap-1">
-          <WLabel usage="companyId">Company</WLabel>
-          <select id="companyId" v-model="companyId" required>
-            <option
-              v-for="(company, index) in companies"
-              :key="company.id"
-              :value="company.id"
-              :selected="index === 0"
-            >
-              {{ company.name }}
-            </option>
-          </select>
-          <span class="error">{{ companyIdError }}</span>
-        </div>
-        <WButton type="submit" variant="default">Save</WButton>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </template>
