@@ -123,9 +123,10 @@ const { value: companyId, errorMessage: companyIdError } =
           <WLabel usage="companyId">Company</WLabel>
           <select id="companyId" v-model="companyId" required>
             <option
-              v-for="company in companies"
+              v-for="(company, index) in companies"
               :key="company.id"
               :value="company.id"
+              :selected="index === 0"
             >
               {{ company.name }}
             </option>
