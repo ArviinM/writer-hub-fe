@@ -5,6 +5,7 @@ import axiosInstance from '../../utils/axiosInstance'
 import TheArticleForm from '../../components/articles/TheArticleForm.vue'
 import type { Article } from '@/types/types'
 import { useToast } from 'vue-toast-notification'
+import { queryClient } from '@/utils/queryClient'
 
 const toast = useToast()
 const route = useRoute()
@@ -42,6 +43,7 @@ const updateArticleMutation = useMutation({
   onSuccess: () => {
     toast.clear()
     toast.success('Article updated successfully!')
+    queryClient.invalidateQueries({ queryKey: ['articles'] })
     router.push('/articles')
   },
   onError: (error: any) => {

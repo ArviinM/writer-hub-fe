@@ -5,6 +5,7 @@ import axiosInstance from '../../utils/axiosInstance'
 import TheUserForm from '../../components/users/TheUserForm.vue'
 import type { User } from '@/types/types'
 import { useToast } from 'vue-toast-notification'
+import { queryClient } from '@/utils/queryClient'
 
 const toast = useToast()
 const route = useRoute()
@@ -30,6 +31,7 @@ const updateUserMutation = useMutation({
   onSuccess: () => {
     toast.clear()
     toast.success('User updated successfully!')
+    queryClient.invalidateQueries({ queryKey: ['users'] })
     router.push('/users')
   },
   onError: (error: any) => {

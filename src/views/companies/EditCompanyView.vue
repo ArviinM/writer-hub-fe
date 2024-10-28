@@ -5,6 +5,7 @@ import axiosInstance from '../../utils/axiosInstance'
 import TheCompanyForm from '../../components/companies/TheCompanyForm.vue'
 import type { Company } from '@/types/types'
 import { useToast } from 'vue-toast-notification'
+import { queryClient } from '@/utils/queryClient'
 
 const toast = useToast()
 const route = useRoute()
@@ -30,6 +31,7 @@ const updateCompanyMutation = useMutation({
   onSuccess: () => {
     toast.clear()
     toast.success('Company updated successfully!')
+    queryClient.invalidateQueries({ queryKey: ['companies'] })
     router.push('/companies')
   },
   onError: (error: any) => {
